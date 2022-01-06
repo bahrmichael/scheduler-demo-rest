@@ -6,10 +6,10 @@ import {metricScope} from "aws-embedded-metrics";
 
 const ddb = new DynamoDB.DocumentClient();
 
-const {API_KEY, APP_ID, SCHEDULER_ENDPOINT, MESSAGES_TABLE, MESSAGES_PER_MINUTE} = process.env;
+const {API_KEY, APP_ID, MESSAGES_TABLE, MESSAGES_PER_MINUTE} = process.env;
 
 const scheduler = axios.create({
-  baseURL: SCHEDULER_ENDPOINT,
+  baseURL: 'https://api.point-in-time-scheduler.com',
   timeout: 6_000,
 });
 
@@ -17,6 +17,11 @@ const MINUTE = 60;
 const MAX_MESSAGES_PER_MINUTE = 500;
 
 export const main = metricScope(metrics => async () => {
+
+  if (!API_KEY || !APP_ID) {
+    console.log('Missing API key or Application ID. Aborting.');
+    return;
+  }
 
   // Allow up to 500 messages per minute. Beyond that we run into risk of timing out.
   // Feel free to adjust if you know what you're doing.
@@ -55,7 +60,7 @@ export const main = metricScope(metrics => async () => {
     console.log('Scheduled message', message);
   }
 
-  metrics.setNamespace("ServerlessSchedulerDemo");
+  metrics.setNamespace("SchedulerDemo");
   metrics.putMetric("SentMessages", messageCount, "Count");
 });
 

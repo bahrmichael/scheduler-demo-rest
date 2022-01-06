@@ -33,7 +33,7 @@ async function getMessage(payload: string): Promise<any> {
 
 export const main = metricScope(metrics => async (event: APIGatewayProxyEventBase<any>) => {
 
-  metrics.setNamespace("ServerlessSchedulerDemo");
+  metrics.setNamespace("SchedulerDemo");
   metrics.putMetric("ReceiveMessages", 1, "Count");
 
   // The endpoint is authorized via an x-api-key header that is required by ApiGateway
