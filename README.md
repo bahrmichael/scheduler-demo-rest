@@ -16,6 +16,8 @@ You will also need to [sign in at the Point In Time Scheduler Dashboard](https:/
 2. Run `yarn deploy` or `npm run deploy` to deploy the demo app to your AWS account
 3. When the deployment finishes you will see an API key and a URL for the receiveMessage endpoint. You will need those later.
 
+![Terminal after deployment](https://github.com/bahrmichael/scheduler-demo-rest/blob/main/docs/img/terminal.png)
+
 ## 2. Register the Application
 
 [Sign in at the Point In Time Scheduler Dashboard](https://app.point-in-time-scheduler.com) and register your first application.
