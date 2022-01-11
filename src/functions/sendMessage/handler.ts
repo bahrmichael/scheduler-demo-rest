@@ -6,10 +6,10 @@ import {metricScope} from "aws-embedded-metrics";
 
 const ddb = new DynamoDB.DocumentClient();
 
-const {API_KEY, APP_ID, MESSAGES_TABLE, MESSAGES_PER_MINUTE} = process.env;
+const {API_KEY, APP_ID, MESSAGES_TABLE, MESSAGES_PER_MINUTE, SCHEDULER_ENDPOINT} = process.env;
 
 const scheduler = axios.create({
-  baseURL: 'https://api.point-in-time-scheduler.com',
+  baseURL: SCHEDULER_ENDPOINT,
   timeout: 6_000,
 });
 
