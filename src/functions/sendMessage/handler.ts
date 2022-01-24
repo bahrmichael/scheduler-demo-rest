@@ -34,7 +34,9 @@ export const main = metricScope(metrics => async () => {
 
     // Build a message with the delay and a random payload
     const message = {
-      payload: `${new Date().getTime()}`,
+      payload: {
+        scheduledAt: `${new Date().getTime()}`
+      },
       sendAt: dateWithDelay(delayInSeconds).toISOString(),
     };
 
@@ -42,6 +44,7 @@ export const main = metricScope(metrics => async () => {
     await ddb.put({
       TableName: MESSAGES_TABLE,
       Item: {
+        pk: message.payload.scheduledAt,
         ...message,
         status: 'FRESH',
         // Clean up messages after 60 minutes

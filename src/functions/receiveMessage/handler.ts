@@ -8,11 +8,11 @@ const ddb = new DynamoDB.DocumentClient();
 
 const {MESSAGES_TABLE} = process.env;
 
-async function setMessageReceived(payload: string): Promise<void> {
+async function setMessageReceived(pk: string): Promise<void> {
   await ddb.update({
     TableName: MESSAGES_TABLE,
     Key: {
-      payload,
+      pk,
     },
     UpdateExpression: 'set #status = :s',
     ExpressionAttributeNames: {
@@ -24,10 +24,10 @@ async function setMessageReceived(payload: string): Promise<void> {
   }).promise();
 }
 
-async function getMessage(payload: string): Promise<any> {
+async function getMessage(pk: string): Promise<any> {
   return (await ddb.get({
     TableName: MESSAGES_TABLE,
-    Key: {payload}
+    Key: {pk}
   }).promise()).Item;
 }
 
@@ -45,15 +45,15 @@ export const main = metricScope(metrics => async (event: APIGatewayProxyEventBas
 
   console.log('Received event', body);
 
-  const {payload} = JSON.parse(body);
+  const {scheduledAt} = JSON.parse(body);
 
   // Record metrics about how late the message was.
-  const {sendAt: expectedArrival} = await getMessage(payload);
+  const {sendAt: expectedArrival} = await getMessage(scheduledAt);
   const arrivalDelay = new Date().getTime() - new Date(expectedArrival).getTime();
   metrics.putMetric("ArrivalDelay", arrivalDelay, "Milliseconds");
 
   // Mark the message as received, for later metrics about lost messages.
-  await setMessageReceived(payload);
+  await setMessageReceived(scheduledAt);
 
   return {
     statusCode: 200,

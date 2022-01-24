@@ -35,11 +35,11 @@ const serverlessConfiguration: AWS = {
         Properties: {
           BillingMode: 'PAY_PER_REQUEST',
           KeySchema: [{
-            AttributeName: 'payload',
+            AttributeName: 'pk',
             KeyType: 'HASH'
           }],
           AttributeDefinitions: [{
-            AttributeName: 'payload',
+            AttributeName: 'pk',
             AttributeType: 'S'
           }],
           TimeToLiveSpecification: {
